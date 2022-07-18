@@ -3,12 +3,10 @@ package com.project.web_prj.board.repository;
 import com.project.web_prj.board.domain.Board;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository("bri")
 @Log4j2
@@ -62,5 +60,11 @@ public class BoardRepositoryImpl implements BoardRepository {
                 board.getContent(),
                 board.getBoardNo()
                 ) == 1;
+    }
+
+    @Override
+    public int getTotalCount() {
+        String sql = "SELECT COUNT(*) AS cnt FROM tbl_board";
+        return template.queryForObject(sql, Integer.class);
     }
 }

@@ -3,7 +3,6 @@ package com.project.web_prj.board.repository;
 import com.project.web_prj.board.domain.Board;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BoardRepository {
 
@@ -21,4 +20,7 @@ public interface BoardRepository {
 
     // 게시글 수정
     boolean modify(Board board);
+
+    // 전체 게시물 수 조회
+    int getTotalCount();
 }
