@@ -3,6 +3,7 @@ package com.project.web_prj.board.repository;
 import com.project.web_prj.board.domain.Board;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardRepository {
 
