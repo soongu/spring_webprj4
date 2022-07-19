@@ -73,6 +73,15 @@
     </div>
 
     <script>
+
+        const msg = '${msg}';
+        console.log('msg: ', msg);
+
+        if (msg === 'reg-success') {
+            alert('게시물이 정상 등록되었습니다.');
+        }
+
+
         //상세보기 요청 이벤트
         const $table = document.querySelector(".articles");
 
