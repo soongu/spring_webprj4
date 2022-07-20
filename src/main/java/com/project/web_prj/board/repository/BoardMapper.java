@@ -2,13 +2,18 @@ package com.project.web_prj.board.repository;
 
 import com.project.web_prj.board.domain.Board;
 import com.project.web_prj.common.paging.Page;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-public interface BoardRepository {
+@Mapper
+public interface BoardMapper {
 
     // 게시글 쓰기 기능
     boolean save(Board board);
+
+    // 게시글 전체 조회
+    List<Board> findAll();
 
     // 게시글 전체 조회 with paging
     List<Board> findAll(Page page);
