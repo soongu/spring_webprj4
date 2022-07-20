@@ -54,7 +54,10 @@ public class BoardController {
 
     // 게시물 상세 조회 요청
     @GetMapping("/content/{boardNo}")
-    public String content(@PathVariable Long boardNo, Model model, HttpServletResponse response, HttpServletRequest request) {
+    public String content(@PathVariable Long boardNo
+            , Model model, HttpServletResponse response, HttpServletRequest request
+            , @ModelAttribute("p") Page page
+    ) {
         log.info("controller request /board/content GET! - {}", boardNo);
         Board board = boardService.findOneService(boardNo, response, request);
         log.info("return data - {}", board);
