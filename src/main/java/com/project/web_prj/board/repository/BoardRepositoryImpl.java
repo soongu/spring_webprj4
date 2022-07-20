@@ -29,6 +29,11 @@ public class BoardRepositoryImpl implements BoardRepository {
         ) == 1;
     }
 
+    @Override
+    public List<Board> findAll() {
+        return null;
+    }
+
 //    @Override
 //    public List<Board> findAll() {
 //        String sql = "SELECT  *\n" +

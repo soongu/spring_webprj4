@@ -10,6 +10,8 @@ public interface BoardRepository {
     // 게시글 쓰기 기능
     boolean save(Board board);
 
+    List<Board> findAll();
+
     // 게시글 전체 조회 with paging
     List<Board> findAll(Page page);
 
