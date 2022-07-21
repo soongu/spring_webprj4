@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +82,30 @@ public class BoardService {
         for (Board b : boardList) {
             convertDateFormat(b);
             substringTitle(b);
+            checkNewArticle(b);
         }
+    }
+
+    // 신규 게시물 여부 처리
+    private void checkNewArticle(Board b) {
+        // 게시물의 작성일자와 현재 시간을 대조
+
+        // 게시물의 작성일자 가져오기 - 16억 5초
+        long regDateTime = b.getRegDate().getTime();
+
+        // 현재 시간 얻기 (밀리초) - 16억 10초
+        long nowTime = System.currentTimeMillis();
+
+        // 현재시간 - 작성시간
+        long diff = nowTime - regDateTime;
+
+        // 신규 게시물 제한시간
+        long limitTime = 60 * 5 * 1000;
+
+        if (diff < limitTime) {
+            b.setNewArticle(true);
+        }
+
     }
 
     private void convertDateFormat(Board b) {

@@ -68,6 +68,29 @@
             background: #333 !important;
             color: #fff !important;
         }
+
+        /* 검색창 */
+        .board-list .top-section {
+            display: flex;
+            justify-content: space-between;
+        }
+        .board-list .top-section .search {
+            flex: 4;
+        }
+        .board-list .top-section .amount {
+            flex: 4;
+        }
+        .board-list .top-section .search form {
+            display: flex;
+        }
+        .board-list .top-section .search form #search-type {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .board-list .top-section .search form input[name=keyword] {
+            flex: 3;
+        }
+
     </style>
 </head>
 
@@ -91,7 +114,7 @@
                             <option value="tc">제목+내용</option>
                         </select>
 
-                        <input type="text" class="form-control" name="keyword">
+                        <input type="text" class="form-control" name="keyword" value="${s.keyword}">
 
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search"></i>
@@ -121,7 +144,12 @@
                     <tr>
                         <td>${b.boardNo}</td>
                         <td>${b.writer}</td>
-                        <td title="${b.title}">${b.shortTitle}</td>
+                        <td title="${b.title}">
+                            ${b.shortTitle} 
+                            <c:if test="${b.newArticle}">
+                                <span class="badge rounded-pill bg-danger">new</span>
+                            </c:if>
+                        </td>
                         <td>${b.viewCnt}</td>
                         <td>${b.prettierDate}</td>
                     </tr>
@@ -137,18 +165,18 @@
 
                         <c:if test="${pm.prev}">
                             <li class="page-item"><a class="page-link"
-                                    href="/board/list?pageNum=${pm.beginPage - 1}&amount=${pm.page.amount}">prev</a></li>
+                                    href="/board/list?pageNum=${pm.beginPage - 1}&amount=${pm.page.amount}&type=${s.type}&keyword=${s.keyword}">prev</a></li>
                         </c:if>
 
                         <c:forEach var="n" begin="${pm.beginPage}" end="${pm.endPage}" step="1">
                             <li data-page-num="${n}" class="page-item">
-                                <a class="page-link" href="/board/list?pageNum=${n}&amount=${pm.page.amount}">${n}</a>
+                                <a class="page-link" href="/board/list?pageNum=${n}&amount=${pm.page.amount}&type=${s.type}&keyword=${s.keyword}">${n}</a>
                             </li>
                         </c:forEach>
 
                         <c:if test="${pm.next}">
                             <li class="page-item"><a class="page-link"
-                                    href="/board/list?pageNum=${pm.endPage + 1}&amount=${pm.page.amount}">next</a></li>
+                                    href="/board/list?pageNum=${pm.endPage + 1}&amount=${pm.page.amount}&type=${s.type}&keyword=${s.keyword}">next</a></li>
                         </c:if>
 
                     </ul>
@@ -218,12 +246,25 @@
 
         }
 
+        // 옵션태그 고정
+        function fixSearchOption() {
+            const $select = document.getElementById('search-type');
+
+            for (let $opt of [...$select.children]) {
+                if ($opt.value === '${s.type}') {
+                    $opt.setAttribute('selected', 'selected');
+                    break;
+                }
+            }
+        }
+
 
         (function () {
 
             alertServerMessage();
             detailEvent();
             appendPageActive();
+            fixSearchOption();
 
         })();
 
