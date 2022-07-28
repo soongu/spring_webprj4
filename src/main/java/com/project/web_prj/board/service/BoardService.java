@@ -163,9 +163,15 @@ public class BoardService {
     }
 
     // 게시물 삭제 요청 중간 처리
+    @Transactional
     public boolean removeService(Long boardNo) {
         log.info("remove service start - {}", boardNo);
-        return boardMapper.remove(boardNo);
+
+        // 댓글 먼저 모두 삭제
+        replyMapper.removeAll(boardNo);
+        // 원본 게시물 삭제
+        boolean remove = boardMapper.remove(boardNo);
+        return remove;
     }
 
     // 게시물 수정 요청 중간 처리
