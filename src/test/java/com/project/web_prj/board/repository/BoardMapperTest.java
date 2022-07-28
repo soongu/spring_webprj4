@@ -20,8 +20,7 @@ class BoardMapperTest {
     void searchByTitleTest() {
 
         Search search = new Search(
-                            new Page(1, 10)
-                            , "tc"
+                            "tc"
                             , "ㅋㅋ"
                         );
 
