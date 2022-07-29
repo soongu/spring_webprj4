@@ -43,9 +43,10 @@
         .pagination .page-item.p-active a {
             background: #333 !important;
             color: #fff !important;
-            cursor: default; 
+            cursor: default;
             pointer-events: none;
         }
+
         .pagination .page-item:hover a {
             background: #888 !important;
             color: #fff !important;
@@ -77,6 +78,7 @@
 
                 <p class="main-content">
                     ${b.content}
+
                 </p>
 
             </div>
@@ -213,7 +215,7 @@
     <!-- 댓글관련 script -->
     <script>
         //원본 글 번호
-        let bno = '${b.boardNo}';
+        const bno = '${b.boardNo}';
         // console.log('bno:', bno);
 
         // 댓글 요청 URL
@@ -267,7 +269,7 @@
             }
             //페이지 번호 리스트 만들기
             for (let i = begin; i <= end; i++) {
-                let active = ''; 
+                let active = '';
                 if (pageInfo.page.pageNum === i) {
                     active = 'p-active';
                 }
@@ -282,7 +284,12 @@
             }
 
             // 페이지태그 렌더링
-            document.querySelector('.pagination').innerHTML = tag;
+            const $pageUl = document.querySelector('.pagination');
+            $pageUl.innerHTML = tag;
+
+            // ul에 마지막페이지 번호 저장.
+            $pageUl.dataset.fp = pageInfo.finalPage;
+
 
         }
 
@@ -330,9 +337,25 @@
             // 페이지 렌더링
             makePageDOM(maker);
 
+
+
+        }
+
+        // 댓글 목록을 서버로부터 비동기요청으로 불러오는 함수
+        function showReplies(pageNum = 1) {
+
+            fetch(URL + '?boardNo=' + bno + '&pageNum=' + pageNum)
+                .then(res => res.json())
+                .then(replyMap => {
+                    makeReplyDOM(replyMap);
+                });
+        }
+
+        // 페이지 버튼 클릭이벤트 등록 함수
+        function makePageButtonClickEvent() {
             // 페이지 버튼 클릭이벤트 처리
             const $pageUl = document.querySelector('.pagination');
-            $pageUl.addEventListener('click', e => {
+            $pageUl.onclick = e => {
                 if (!e.target.matches('.page-item a')) return;
 
                 e.preventDefault();
@@ -342,24 +365,68 @@
 
                 // 페이지 번호에 맞는 목록 비동기 요청
                 showReplies(pageNum);
-            });
-
+            };
         }
 
-        // 댓글 목록을 서버로부터 비동기요청으로 불러오는 함수
-        function showReplies(pageNum=1) {
+        // 댓글 등록 이벤트 처리 핸들러 등록 함수
+        function makeReplyRegisterClickEvent() {
+            
+            document.getElementById('replyAddBtn').onclick 
+                = makeReplyRegisterClickHandler;
+        }
 
-            fetch(URL + '?boardNo=' + bno + '&pageNum=' + pageNum)
-                .then(res => res.json())
-                .then(replyMap => {
-                    makeReplyDOM(replyMap);
+
+        // 댓글 등록 이벤트 처리 핸들러 함수
+        function makeReplyRegisterClickHandler(e) {
+
+            const $writerInput = document.getElementById('newReplyWriter');
+            const $contentInput = document.getElementById('newReplyText');
+
+            // 서버로 전송할 데이터들
+            const replyData = {
+                replyWriter: $writerInput.value,
+                replyText: $contentInput.value,
+                boardNo: bno
+            };
+            
+            // POST요청을 위한 요청 정보 객체
+            const reqInfo = {
+                method: 'POST'
+                , headers: {
+                    'content-type' : 'application/json'
+                }
+                , body: JSON.stringify(replyData)
+            };
+
+            fetch(URL, reqInfo)
+                .then(res => res.text())
+                .then(msg => {
+                    if (msg === 'insert-success') {
+                        alert('댓글 등록 성공');
+                        // 댓글 입력창 리셋
+                        $writerInput.value = '';
+                        $contentInput.value = '';
+                        // 댓글 목록 재요청
+                        showReplies(document.querySelector('.pagination').dataset.fp);
+                    } else {
+                        alert('댓글 등록 실패');
+                    }
                 });
         }
 
         // 메인 실행부
         (function () {
 
+            // 초기 화면 렌더링시 댓글 1페이지 렌더링
             showReplies();
+
+            // 댓글 페이지 버튼 클릭이벤트 처리
+            makePageButtonClickEvent();
+
+            // 댓글 등록 버튼 클릭이벤트 처리
+            makeReplyRegisterClickEvent();
+
+
 
         })();
     </script>
