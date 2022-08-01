@@ -370,9 +370,8 @@
 
         // 댓글 등록 이벤트 처리 핸들러 등록 함수
         function makeReplyRegisterClickEvent() {
-            
-            document.getElementById('replyAddBtn').onclick 
-                = makeReplyRegisterClickHandler;
+
+            document.getElementById('replyAddBtn').onclick = makeReplyRegisterClickHandler;
         }
 
 
@@ -388,14 +387,14 @@
                 replyText: $contentInput.value,
                 boardNo: bno
             };
-            
+
             // POST요청을 위한 요청 정보 객체
             const reqInfo = {
-                method: 'POST'
-                , headers: {
-                    'content-type' : 'application/json'
-                }
-                , body: JSON.stringify(replyData)
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(replyData)
             };
 
             fetch(URL, reqInfo)
@@ -414,6 +413,105 @@
                 });
         }
 
+        // 댓글 수정화면 열기 상세처리
+        function processModifyShow(e, rno) {
+
+            // console.log('수정버튼 클릭함!! after');
+
+            // 클릭한 버튼 근처에 있는 댓글 내용텍스트를 얻어온다.
+            const replyText = e.target.parentElement.parentElement.firstElementChild.textContent;
+            //console.log('댓글내용:', replyText);
+
+            // 모달에 해당 댓글내용을 배치한다.
+            document.getElementById('modReplyText').textContent = replyText;
+
+            // 모달을 띄울 때 다음 작업(수정완료처리)을 위해 댓글번호를 모달에 달아두자.
+            const $modal = document.querySelector('.modal');
+            $modal.dataset.rno = rno;
+        }
+
+        // 댓글 삭제 상세처리
+        function processRemove(rno) {
+            if (!confirm('진짜로 삭제합니까??')) return;
+
+            fetch(URL + '/' + rno, {
+                    method: 'DELETE'
+                })
+                .then(res => res.text())
+                .then(msg => {
+                    if (msg === 'del-success') {
+                        alert('삭제 성공!!');
+                        showReplies(); // 댓글 새로불러오기
+                    } else {
+                        alert('삭제 실패!!');
+                    }
+                });
+        }
+
+
+        // 댓글 수정화면 열기, 삭제 처리 핸들러 정의
+        function makeReplyModAndDelHandler(e) {
+
+            const rno = e.target.parentElement.parentElement.parentElement.dataset.replyid;
+
+            e.preventDefault();
+
+            // console.log('수정버튼 클릭함!! before');
+            if (e.target.matches('#replyModBtn')) {
+                processModifyShow(e, rno);
+            } else if (e.target.matches('#replyDelBtn')) {
+                processRemove(rno);
+            }
+        }
+
+        // 댓글 수정 화면 열기, 삭제 이벤트 처리
+        function openModifyModalAndRemoveEvent() {
+
+            const $replyData = document.getElementById('replyData');
+            $replyData.onclick = makeReplyModAndDelHandler;
+        }
+
+        // 댓글 수정 비동기 처리 이벤트
+        function replyModifyEvent() {
+
+            const $modal = $('#replyModifyModal');
+
+            document.getElementById('replyModBtn').onclick =
+                e => {
+                    // console.log('수정 완료 버튼 클릭!');
+
+                    // 서버에 수정 비동기 요청 보내기
+                    const rno = e.target.closest('.modal').dataset.rno;
+                    // console.log(rno);
+
+                    const reqInfo = {
+                        method: 'PUT',
+                        headers: {
+                            'content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            replyText: $('#modReplyText').val(),
+                            replyNo: rno
+                        })
+                    };
+
+
+                    fetch(URL + '/' + rno, reqInfo)
+                        .then(res => res.text())
+                        .then(msg => {
+                            if (msg === 'mod-success') {
+                                alert('수정 성공!!');
+                                $modal.modal('hide'); // 모달창 닫기
+                                showReplies(); // 댓글 새로불러오기
+                            } else {
+                                alert('수정 실패!!');
+                            }
+                        });
+                };
+        }
+
+
+
         // 메인 실행부
         (function () {
 
@@ -425,6 +523,13 @@
 
             // 댓글 등록 버튼 클릭이벤트 처리
             makeReplyRegisterClickEvent();
+
+            // 댓글 수정 모달 오픈, 삭제 이벤트 처리
+            openModifyModalAndRemoveEvent();
+
+            // 댓글 수정 완료 버튼 이벤트 처리
+            replyModifyEvent();
+
 
 
 
