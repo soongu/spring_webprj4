@@ -7,6 +7,8 @@ import com.project.web_prj.common.paging.PageMaker;
 import com.project.web_prj.common.search.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -127,6 +129,17 @@ public class BoardController {
         log.info("controller request /board/modify POST! - {}", board);
         boolean flag = boardService.modifyService(board);
         return flag ? "redirect:/board/content/" + board.getBoardNo() : "redirect:/";
+    }
+
+    // 특정 게시물에 붙은 첨부파일경로 리스트를 클라이언트에게 비동기 전송
+    @GetMapping("/file/{bno}")
+    @ResponseBody
+    public ResponseEntity<List<String>> getFiles(@PathVariable Long bno) {
+
+        List<String> files = boardService.getFiles(bno);
+        log.info("/board/file/{} GET! ASYNC - {}", bno, files);
+
+        return new ResponseEntity<>(files, HttpStatus.OK);
     }
 
 }
