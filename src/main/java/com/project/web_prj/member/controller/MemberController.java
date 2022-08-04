@@ -4,7 +4,6 @@ import com.project.web_prj.member.domain.Member;
 import com.project.web_prj.member.dto.LoginDTO;
 import com.project.web_prj.member.service.LoginFlag;
 import com.project.web_prj.member.service.MemberService;
-import com.project.web_prj.util.LoginUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;

@@ -41,7 +41,8 @@ public class MemberService {
 
     /**
      * 계정과 이메일의 중복을 확인하는 메서드
-     * @param type - 확인할 정보 (ex: account or email)
+     *
+     * @param type  - 확인할 정보 (ex: account or email)
      * @param value - 확인할 값
      * @return 중복이라면 true, 중복이 아니라면 false
      */
@@ -102,15 +103,11 @@ public class MemberService {
         response.addCookie(c);
 
         // 4. DB에 쿠키값과 수명 저장
-        AutoLoginDTO dto = new AutoLoginDTO();
-        dto.setSessionId(sessionId);
-
         // 자동로그인 유지시간(초)을 날짜로 변환
         long nowTime = System.currentTimeMillis();
-        Date limitDate = new Date(nowTime + ((long)limitTime * 1000));
-        dto.setLimitTime(limitDate);
+        Date limitDate = new Date(nowTime + ((long) limitTime * 1000));
 
-        dto.setAccount(account);
+        AutoLoginDTO dto = new AutoLoginDTO(account, sessionId, limitDate);
 
         memberMapper.saveAutoLoginValue(dto);
     }
@@ -125,10 +122,7 @@ public class MemberService {
             response.addCookie(c);
 
             //2. 데이터베이스 처리
-            AutoLoginDTO dto = new AutoLoginDTO();
-            dto.setSessionId("none");
-            dto.setLimitTime(new Date());
-            dto.setAccount(account);
+            AutoLoginDTO dto = new AutoLoginDTO(account, "none", new Date());
             memberMapper.saveAutoLoginValue(dto);
         }
     }
