@@ -117,8 +117,9 @@
             alert('비밀번호가 틀렸습니다.');
         }
 
-        const warning = '${warningMsg}';
-        if (warning === 'forbidden') {
+        const warning = '${message}';
+        console.log('message:', warning);
+        if (warning === 'no-login') {
             alert('로그인 후 사용할 수 있습니다.');
         }
     </script>

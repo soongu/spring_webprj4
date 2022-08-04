@@ -37,7 +37,7 @@ public class BoardInterceptor implements HandlerInterceptor {
             log.info("this request deny!! 집에 가");
             // dispatcher.forward(request, response);
 
-            response.sendRedirect("/member/sign-in");
+            response.sendRedirect("/member/sign-in?message=no-login");
             return false;
         }
         return true;
