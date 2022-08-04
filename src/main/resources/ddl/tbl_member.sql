@@ -18,7 +18,8 @@ ALTER TABLE tbl_reply ADD account VARCHAR2(50) NOT NULL;
 
 SELECT * FROM tbl_member;
 
-
+ALTER TABLE tbl_member ADD session_id VARCHAR2(200) DEFAULT 'none';
+ALTER TABLE tbl_member ADD limit_time DATE;
 
 
 
