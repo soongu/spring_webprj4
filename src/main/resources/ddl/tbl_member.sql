@@ -11,6 +11,9 @@ CREATE TABLE tbl_member (
     CONSTRAINT pk_member PRIMARY KEY (account)
 );
 
+ALTER TABLE tbl_board ADD account VARCHAR2(50) NOT NULL;
+ALTER TABLE tbl_reply ADD account VARCHAR2(50) NOT NULL;
+
 
 
 SELECT * FROM tbl_member;

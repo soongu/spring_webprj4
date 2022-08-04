@@ -1,5 +1,6 @@
 package com.project.web_prj.interceptor;
 
+import com.project.web_prj.board.domain.Board;
 import com.project.web_prj.util.LoginUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,10 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static com.project.web_prj.util.LoginUtils.*;
 
@@ -46,5 +51,6 @@ public class BoardInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         log.info("board interceptor postHandle() ! ");
+
     }
 }
