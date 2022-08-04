@@ -114,6 +114,7 @@ public class BoardController {
     // 게시물 삭제 요청
     @GetMapping("/delete")
     public String delete(Long boardNo) {
+
         log.info("controller request /board/delete GET! - bno: {}", boardNo);
         return boardService.removeService(boardNo)
                 ? "redirect:/board/list" : "redirect:/";
