@@ -445,7 +445,7 @@
                     if (msg === 'insert-success') {
                         alert('댓글 등록 성공');
                         // 댓글 입력창 리셋
-                        $writerInput.value = '';
+                        // $writerInput.value = '';
                         $contentInput.value = '';
                         // 댓글 목록 재요청
                         showReplies(document.querySelector('.pagination').dataset.fp);
@@ -462,10 +462,10 @@
 
             // 클릭한 버튼 근처에 있는 댓글 내용텍스트를 얻어온다.
             const replyText = e.target.parentElement.parentElement.firstElementChild.textContent;
-            //console.log('댓글내용:', replyText);
+            console.log('수정 댓글내용:', replyText);
 
             // 모달에 해당 댓글내용을 배치한다.
-            document.getElementById('modReplyText').textContent = replyText;
+            document.getElementById('modReplyText').value = replyText;
 
             // 모달을 띄울 때 다음 작업(수정완료처리)을 위해 댓글번호를 모달에 달아두자.
             const $modal = document.querySelector('.modal');
@@ -495,6 +495,7 @@
         function makeReplyModAndDelHandler(e) {
 
             const rno = e.target.parentElement.parentElement.parentElement.dataset.replyid;
+            console.log('mod get rno: ', rno);
 
             e.preventDefault();
 
@@ -524,7 +525,7 @@
 
                     // 서버에 수정 비동기 요청 보내기
                     const rno = e.target.closest('.modal').dataset.rno;
-                    // console.log(rno);
+                    console.log('mod post rno', rno);
 
                     const reqInfo = {
                         method: 'PUT',
@@ -616,7 +617,7 @@
                     $img.setAttribute('alt', originFileName);
 
                     $a.append($img);
-                    $a.innerHTML += '<span>' + originFileName + '</span';
+                    $a.innerHTML += '<span>' + originFileName + '</span>';
 
                     $('.uploaded-list').append($a);
 
