@@ -1,13 +1,16 @@
 package com.project.web_prj.member.service;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.project.web_prj.member.domain.OAuthValue;
+import com.project.web_prj.member.dto.KaKaoUserInfoDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 @Service
 @Log4j2
@@ -46,6 +49,21 @@ public class KakaoService implements OAuthService, OAuthValue {
             String responseData = br.readLine();
             log.info("responseData - {}", responseData);
 
+            // 3-b. 응답받은 json을 gson라이브러리를 사용하여 자바 객체로 파싱
+            JsonParser parser = new JsonParser();
+            // JsonElement는 자바로 변환된 JSON
+            JsonElement element = parser.parse(responseData);
+
+            // 3-c. json 프로퍼티 키를 사용해서 필요한 데이터 추출
+            JsonObject object = element.getAsJsonObject();
+            String accessToken = object.get("access_token").getAsString();
+            String tokenType = object.get("token_type").getAsString();
+
+            log.info("accessToken - {}", accessToken);
+            log.info("tokenType - {}", tokenType);
+
+            return accessToken;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,5 +97,55 @@ public class KakaoService implements OAuthService, OAuthValue {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public KaKaoUserInfoDTO getKakaoUserInfo(String accessToken) throws Exception {
+
+        String reqUri = "https://kapi.kakao.com/v2/user/me";
+
+        URL url = new URL(reqUri);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.setRequestMethod("POST");
+
+        conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+        conn.setDoOutput(true);
+
+        int responseCode = conn.getResponseCode();
+        log.info("userInfo res-code - {}", responseCode);
+
+        //  응답 데이터 받기
+        try (BufferedReader br
+                     = new BufferedReader(
+                new InputStreamReader(conn.getInputStream()))) {
+
+            String responseData = br.readLine();
+            log.info("responseData - {}", responseData);
+
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(responseData);
+
+            JsonObject object = element.getAsJsonObject();
+
+            JsonObject kakaoAccount = object.get("kakao_account").getAsJsonObject();
+
+            JsonObject profile = kakaoAccount.get("profile").getAsJsonObject();
+
+            String nickName = profile.get("nickname").getAsString();
+            String profileImage = profile.get("profile_image_url").getAsString();
+            String email = kakaoAccount.get("email").getAsString();
+            String gender = kakaoAccount.get("gender").getAsString();
+
+            KaKaoUserInfoDTO dto = new KaKaoUserInfoDTO(nickName, profileImage, email, gender);
+
+            log.info("카카오 유저 정보: {}", dto);
+
+            return dto;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

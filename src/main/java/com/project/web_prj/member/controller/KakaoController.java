@@ -33,6 +33,9 @@ public class KakaoController {
         // 우리서버에서 카카오서버로 통신을 해야함.
         String accessToken = kakaoService.getAccessToken(code);
 
+        // 액세스 토큰을 통해 사용자 정보 요청(프로필사진, 닉네임 등)
+        kakaoService.getKakaoUserInfo(accessToken);
+
         return "";
     }
 }
