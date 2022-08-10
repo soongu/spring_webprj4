@@ -112,16 +112,19 @@ public class MemberController {
 
             // SNS로그인 상태라면 해당 SNS 로그아웃처리를 진행
             SNSLogin from = (SNSLogin) session.getAttribute(LOGIN_FROM);
-            switch (from) {
-                case KAKAO:
-                    kakaoService.logout((String) session.getAttribute("accessToken"));
-                    break;
-                case NAVER:
-                    break;
-                case GOOGLE:
-                    break;
-                case FACEBOOK:
-                    break;
+
+            if (from != null) {
+                switch (from) {
+                    case KAKAO:
+                        kakaoService.logout((String) session.getAttribute("accessToken"));
+                        break;
+                    case NAVER:
+                        break;
+                    case GOOGLE:
+                        break;
+                    case FACEBOOK:
+                        break;
+                }
             }
 
             // 1. 세션에서 정보를 삭제한다.
