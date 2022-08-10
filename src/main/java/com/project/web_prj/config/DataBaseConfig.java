@@ -18,10 +18,16 @@ public class DataBaseConfig {
     public DataSource dataSource() {
 
         HikariConfig config = new HikariConfig();
-        config.setUsername("spring4");
+        /*config.setUsername("spring4");
         config.setPassword("1234");
         config.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:xe");
-        config.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+        config.setDriverClassName("oracle.jdbc.driver.OracleDriver");*/
+
+        config.setUsername("admin");
+        config.setPassword("hsg88490");
+//        config.setJdbcUrl("jdbc:mariadb://localhost:3306/spring4");
+        config.setJdbcUrl("jdbc:mariadb://database-1.c6wmluh3fqex.ap-northeast-2.rds.amazonaws.com:3306/spring4");
+        config.setDriverClassName("org.mariadb.jdbc.Driver");
 
         return new HikariDataSource(config);
     }

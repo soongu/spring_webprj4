@@ -23,7 +23,7 @@ import java.util.List;
 public class UploadController {
 
     // 업로드 파일 저장 경로
-    private static final String UPLOAD_PATH = "C:\\sl_dev\\upload";
+    private static final String UPLOAD_PATH = "/home/ec2-user/sl_dev/upload";
 
     // upload-form.jsp로 포워딩하는 요청
     @GetMapping("/upload-form")
