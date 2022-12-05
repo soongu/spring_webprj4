@@ -4,7 +4,7 @@
 <html lang="ko">
 
 <head>
-    <%@ include file="../include/static-head.jsp" %>
+    <%@ include file="../include/static-head.jspf" %>
 
     <style>
         .content-container {
@@ -68,7 +68,7 @@
 <body>
 
     <div class="wrap">
-        <%@ include file="../include/header.jsp" %>
+        <%@ include file="../include/header.jspf" %>
 
         <div class="content-container">
 
@@ -208,7 +208,7 @@
         </div>
 
 
-        <%@ include file="../include/footer.jsp" %>
+        <%@ include file="../include/footer.jspf" %>
     </div>
 
 
